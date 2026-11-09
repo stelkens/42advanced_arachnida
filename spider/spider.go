@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	"golang.org/x/net/html"
 )
 
@@ -12,8 +14,12 @@ func findImage(node *html.Node, count *int){
 	if node.Type == html.ElementNode && node.Data == "img" {
 			for _, attr := range node.Attr{
 				if attr.Key == "src" {
-					downloadImage(attr.Val, fmt.Sprintf("%s%d.jpg", "image_", *count))
-					*count++
+					err :=downloadImage(attr.Val, fmt.Sprintf("image_%d.jpg", *count))
+					if err != nil {
+						log.Println("Download failed", err)
+					}else{
+						*count++
+					}
 				}
 			}
 	}

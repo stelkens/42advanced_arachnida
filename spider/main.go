@@ -26,7 +26,7 @@ func main() {
 		return
 	}
 
-	count := new(int)
+	count := 0
 
-	findImage(doc, count)
+	findImage(doc, &count)
 }
