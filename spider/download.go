@@ -5,33 +5,16 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"net/url"
+	//"net/url"
 	"os"
 )
 
 //creates a file with name <filename>
 //copies download of <url> in that file
 //returns error if it fails
-func downloadImage(imageURL string, pageURL string, filename string) error{
+func downloadImage(absoluteURL string, count *int) error{
 
-	baseURL,err := url.Parse(pageURL)
-
-	if err != nil {
-		log.Println("Invalid page URL:", err)
-		return err
-	}
-
-	relativeURL,err := url.Parse(imageURL)
-
-	if err != nil {
-		log.Println("Invalid page URL:", err)
-		return err
-	}
-
-	//creates absolute URL out of page URL and image URL
-	absoluteURL := baseURL.ResolveReference(relativeURL)
-
-	response,err := http.Get(absoluteURL.String())
+	response,err := http.Get(absoluteURL)					//access URL
 
 	if err != nil {
 		log.Println("Get response failed:", err)
@@ -44,6 +27,14 @@ func downloadImage(imageURL string, pageURL string, filename string) error{
 		return fmt.Errorf("HTTP error: %s", response.Status)
 	}
 
+	imageFormat := valImage(absoluteURL)						//checks if image has right format
+
+	if imageFormat == ""{
+		return nil
+	}
+
+	filename := fmt.Sprintf("image_%d%s", *count, imageFormat)	//creates filename
+	
 	file,err := os.Create(filename)
 
 	if err != nil{
@@ -54,6 +45,8 @@ func downloadImage(imageURL string, pageURL string, filename string) error{
 	defer file.Close()
 
 	_,err = io.Copy (file, response.Body)
+	
+	*count++
 
 	return err
 }
