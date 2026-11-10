@@ -31,7 +31,7 @@ func findImage(node *html.Node, pageURL string, count *int){
 	}
 }
 
-//saves links recuvsivly in a []string without duplicates 
+//saves links recursivly in a []string without duplicates 
 func findLinks(node *html.Node, pageURL string, listURL []string)([]string){
 	if node.Type == html.ElementNode && node.Data == "a" {
 		for _, attr := range node.Attr{
