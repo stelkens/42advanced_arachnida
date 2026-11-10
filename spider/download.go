@@ -1,19 +1,37 @@
 package main
 
 import (
-	"os"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
-	"io"
-	"fmt"
+	"net/url"
+	"os"
 )
 
 //creates a file with name <filename>
 //copies download of <url> in that file
 //returns error if it fails
-func downloadImage(url string, filename string) error{
-	
-	response,err := http.Get(url)
+func downloadImage(imageURL string, pageURL string, filename string) error{
+
+	baseURL,err := url.Parse(pageURL)
+
+	if err != nil {
+		log.Println("Invalid page URL:", err)
+		return err
+	}
+
+	relativeURL,err := url.Parse(imageURL)
+
+	if err != nil {
+		log.Println("Invalid page URL:", err)
+		return err
+	}
+
+	//creates absolute URL out of page URL and image URL
+	absoluteURL := baseURL.ResolveReference(relativeURL)
+
+	response,err := http.Get(absoluteURL.String())
 
 	if err != nil {
 		log.Println("Get response failed:", err)
