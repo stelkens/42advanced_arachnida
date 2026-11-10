@@ -13,8 +13,12 @@ func findImage(node *html.Node, pageURL string, count *int){
 	if node.Type == html.ElementNode && node.Data == "img" {
 		for _, attr := range node.Attr{
 			if attr.Key == "src" {
-				filename := fmt.Sprintf("image_%d.jpg", *count)
-				err :=downloadImage(attr.Val, pageURL, filename)
+				imageFormat,_ := valImage(attr.Val)				//checks if image has right format
+				if imageFormat == ""{
+					continue
+				}
+				filename := fmt.Sprintf("image_%d%s", *count, imageFormat)
+				err := downloadImage(attr.Val, pageURL, filename)
 				if err != nil {
 					log.Println("Download failed", err)
 				}else{
