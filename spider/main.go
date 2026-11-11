@@ -20,12 +20,15 @@ func main() {
 	maxDepth := flag.Int("l", 5, "Maximum recursion depth")
 	downloadPath := flag.String("p", "./data/", "Download Path")
 
-	//gives flags there value
-	flag.Parse()
+	//if flag.Parse error exit on 1
+	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
+	os.Exit(1)
+	}
 
 	//sets args to argument, which are no flags
 	args := flag.Args()
 
+	//if more arguments than flags and URL exit on 1
 	if len(args) != 1{
 		log.Println("Usage: ./spider [-r] [-l N] [-p PATH] <URL>")
 		os.Exit(1)
@@ -41,7 +44,7 @@ func main() {
 	visitedURLs := make(map[string]bool)
 	images := make(map[string]bool)
 
-	fmt.Println("[start crawling]")
+	fmt.Println("[start crawling]\n please wait ...")
 
 	//start crawling throug webside
 	crawl(startURL, 0, *maxDepth, visitedURLs, images)
