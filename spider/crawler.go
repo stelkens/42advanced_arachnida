@@ -1,14 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"log"
 
 	"golang.org/x/net/html"
 )
 
-func crawl(pageURL string, depth int, maxDepth int, visitedURLs map[string]bool, imagesURLs map[string]bool){
+func crawl(client *http.Client, pageURL string, depth int, maxDepth int, visitedURLs map[string]bool, imagesURLs map[string]bool){
 	
 	if depth > maxDepth && len(visitedURLs) >= maxPagesVisited{
 		return
@@ -22,10 +21,10 @@ func crawl(pageURL string, depth int, maxDepth int, visitedURLs map[string]bool,
 
 
 	//access Webpage
-	response, err := http.Get(pageURL)
+	response, err := client.Get(pageURL)
 	
 	if  err != nil {
-		fmt.Println("Accessing URL failed")
+		log.Println("Crawling failed:", err)
 		return
 	}
 
@@ -54,6 +53,6 @@ func crawl(pageURL string, depth int, maxDepth int, visitedURLs map[string]bool,
 	linksList = findLinks(tree, pageURL, linksList)
 
 	for _,link := range linksList{
-		crawl(link, depth + 1, maxDepth, visitedURLs, imagesURLs)
+		crawl(client,link, depth + 1, maxDepth, visitedURLs, imagesURLs)
 	}
 }

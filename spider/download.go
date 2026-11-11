@@ -14,12 +14,12 @@ import (
 //creates a file with name <filename>
 //copies download of <url> in that file
 //returns error if it fails
-func downloadImage(absoluteURL string, count *atomic.Int64, dowPath string) error{
+func downloadImage(client *http.Client, absoluteURL string, count *atomic.Int64, dowPath string) error{
 
-	response,err := http.Get(absoluteURL)					//access URL
+	response,err := client.Get(absoluteURL)					//access URL
 
 	if err != nil {
-		log.Println("Get response failed:", err)
+		log.Println("Download failed:", err)
 		return err
 	}
 
@@ -29,7 +29,7 @@ func downloadImage(absoluteURL string, count *atomic.Int64, dowPath string) erro
 		return fmt.Errorf("HTTP error: %s", response.Status)
 	}
 
-	imageFormat := valImage(absoluteURL)						//checks if image has right format
+	imageFormat := valImage(client, absoluteURL)						//checks if image has right format
 
 	if imageFormat == ""{
 		return nil
@@ -53,7 +53,7 @@ func downloadImage(absoluteURL string, count *atomic.Int64, dowPath string) erro
 	return err
 }
 
-func workerDownload(imagesURLs map[string]bool, count *atomic.Int64, dowPath string) {
+func workerDownload(client *http.Client, imagesURLs map[string]bool, count *atomic.Int64, dowPath string) {
 	const workers = 4
 
 	var wg sync.WaitGroup
@@ -67,7 +67,7 @@ func workerDownload(imagesURLs map[string]bool, count *atomic.Int64, dowPath str
 			defer wg.Done()						//tells if worker is done
 
 			for imageURL := range jobs {		//waits for new URLs
-				downloadImage(imageURL, count, dowPath)
+				downloadImage(client, imageURL, count, dowPath)
 				}
 		}()
 	}

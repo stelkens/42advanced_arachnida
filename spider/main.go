@@ -4,8 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"sync/atomic"
+	"time"
 )
 
 const maxPagesVisited = 100
@@ -46,8 +48,13 @@ func main() {
 
 	fmt.Println("[start crawling]\n please wait ...")
 
+	//create client how waits max 10s for webside response
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+
 	//start crawling throug webside
-	crawl(startURL, 0, *maxDepth, visitedURLs, images)
+	crawl(client, startURL, 0, *maxDepth, visitedURLs, images)
 
 	//threat save counter
 	var count atomic.Int64
@@ -62,7 +69,7 @@ func main() {
 	fmt.Println("[start download]\n please wait ...")
 	
 	//start downloading pictures
-	workerDownload(images, &count, *downloadPath)
+	workerDownload(client, images, &count, *downloadPath)
 	
 	fmt.Println("[finish download]")
 }

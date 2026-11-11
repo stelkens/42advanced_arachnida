@@ -31,9 +31,9 @@ import (
 
 //checks if content type from img URL is valid
 //returns image type as ".<type>" string 
-func valImage(imageURL string) (string){
+func valImage(client *http.Client, imageURL string) (string){
 	
-	response,err := http.Get(imageURL)
+	response,err := client.Get(imageURL)
 
 	if err != nil {
 		log.Println("Accessing URL failed:", err)
