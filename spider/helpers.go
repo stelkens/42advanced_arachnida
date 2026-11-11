@@ -65,23 +65,27 @@ func valImage(imageURL string) (string){
 	}
 }
 
-//creates absolute URL out of page URL and image URL
-func getAbsolutPath(imageURL string, pageURL string) (string){
+//creates absolute URL out of image URL
+//if image path is on diffrent Doman boolian is false
+func getAbsolutPath(imageURL string, pageURL string) (string, bool){
+	
 	baseURL,err := url.Parse(pageURL)
 
 	if err != nil {
 		log.Println("Invalid page URL:", err)
-		return ""
+		return "", false
 	}
 
 	relativeURL,err := url.Parse(imageURL)
 
 	if err != nil {
 		log.Println("Invalid page URL:", err)
-		return ""
+		return "", false
 	}
 
 	absoluteURL := baseURL.ResolveReference(relativeURL)
 
-	return absoluteURL.String()
+	sameDoman := absoluteURL.Hostname() == baseURL.Hostname() 
+
+	return absoluteURL.String(), sameDoman
 }
