@@ -59,7 +59,10 @@ func main() {
 	//threat save counter
 	var count atomic.Int64
 
-	//create folder for the downloads
+	//if it exist delete folder for downloads
+	os.RemoveAll(*downloadPath)
+	
+	// create folder for the downloads
 	err := os.MkdirAll(*downloadPath, 0755)
 	
 	if err != nil {
