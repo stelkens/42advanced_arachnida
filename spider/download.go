@@ -54,29 +54,28 @@ func downloadImage(client *http.Client, absoluteURL string, count *atomic.Int64,
 }
 
 func workerDownload(client *http.Client, imagesURLs map[string]bool, count *atomic.Int64, dowPath string) {
+
 	const workers = 4
 
+	// wait function
 	var wg sync.WaitGroup
+
+	//create Channel where job are stored
 	jobs := make(chan string)
 
-	// register working workers
-	for i := 0; i < workers; i++ {
-		wg.Add(1)
-
-		go func() {								//start worker
-			defer wg.Done()						//tells if worker is done
-
-			for imageURL := range jobs {		//waits for new URLs
-				downloadImage(client, imageURL, count, dowPath)
+	for range workers{
+		wg.Go (func() {											//starts goroutine
+			for imageURL := range jobs {						//worker waits for new URL from channel job
+				downloadImage(client, imageURL, count, dowPath)	//worker downloads
 				}
-		}()
+		})
 	}
 
-	// gives URL to worker
+	// sent all URLs from imagesURL map to job channel
 	for imageURL := range imagesURLs {
 		jobs <- imageURL
 	}
 
 	close(jobs)									//no more new URLs arriving
-	wg.Wait()									//waits for all worker
+	wg.Wait()									//waits until count == 0
 }
