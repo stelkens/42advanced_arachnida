@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"path/filepath"
 	"strings"
 )
@@ -13,6 +14,7 @@ func isSupported(filename string) (bool) {
 	case ".jpg", ".jpeg", ".png", ".gif":
 		return true
 	default:
+		log.Println("File type not supported:", filename)
 		return false
 	}
 }
