@@ -23,7 +23,7 @@ type printer struct {}
 
 //Methode: reads exif data and makes readable design for the output
 func (printer) Walk(name exif.FieldName, tag *tiff.Tag) error {
-		_,err := fmt.Fprintf(out, "  %s: %s\n", name, tag.String())
+		_,err := fmt.Fprintf(out, " %s: %s\n", name, tag.String())
 		return err
 }
 
@@ -53,7 +53,7 @@ func scorpion(path string, out *os.File) error{
 	}
 
 	_, err = fmt.Fprintf(out,
-	"**File: %s**\nFilename: %s\nSize: %d Bytes\nLast Modified: %s\n\n",
+	"\t***\tFile: %s\t***\nFilename: %s\nSize: %d Bytes\nLast Modified: %s\n",
 	path,
 	info.Name(),
 	info.Size(),
@@ -78,7 +78,7 @@ func scorpion(path string, out *os.File) error{
 	}
 
 	_, err = fmt.Fprintf(out,
-	"Width: %d\nHeight: %d\nFormat: %s\n",
+	"Width: %d\nHeight: %d\nFormat: %s\n\n",
 	config.Width,
 	config.Height,
 	format,
@@ -108,8 +108,6 @@ func scorpion(path string, out *os.File) error{
 		return err
 	}
 
-	fmt.Fprintln(out, "\t\t******************")
-
 	return nil
 }
 
@@ -138,6 +136,7 @@ func main(){
 			if err != nil{
 				log.Printf("Extract data from %s failed: %s",path ,err)
 			}
+			fmt.Fprintln(out, "\t\t__________________\n\n")
 		}
 	}
 
