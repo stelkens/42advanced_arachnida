@@ -7,6 +7,10 @@ import (
 	"golang.org/x/net/html"
 )
 
+//goes to the links on a webpage recursivly if max depth is not yet reached
+//and if link was not yet visited
+//adds all pictuer URL to map and saves a list of Links
+//continue to crawle to the list of links
 func crawl(client *http.Client, pageURL string, depth int, maxDepth int, visitedURLs map[string]bool, imagesURLs map[string]bool){
 	
 	if depth > maxDepth && len(visitedURLs) >= maxPagesVisited{

@@ -8,27 +8,6 @@ import (
 	"strings"
 )
 
-//checks if image has .jpg, .jpeg, .png, .gif or .bmp ending
-//returns the format
-// func valImage(imageURL string) (string){
-
-// 	parsedURL,err := url.Parse(imageURL)
-
-// 	if err != nil {
-// 		log.Println("Invalid page URL:", err)
-// 		return ""
-// 	}
-
-// 	ext := strings.ToLower(path.Ext(parsedURL.Path))
-
-// 	switch ext{
-// 	case ".jpg", ".jpeg", ".png", ".gif", ".bmp":
-// 		return ext
-// 	default:
-// 		return ""
-// 	}
-// }
-
 //checks if content type from img URL is valid
 //returns image type as ".<type>" string 
 func valImage(client *http.Client, imageURL string) (string){
