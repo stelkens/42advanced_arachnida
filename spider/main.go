@@ -27,6 +27,20 @@ func main() {
 	os.Exit(1)
 	}
 
+	inputDepth := false
+
+	//sets inputDepth true if user inserted -l flag 
+	flag.Visit(func(f *flag.Flag){
+		if f.Name == "l"{
+			inputDepth = true
+		}
+	})
+
+	if inputDepth && !*recursive{
+		log.Println("Error: -l <num> requires -r")
+		os.Exit(1)
+	}
+
 	//sets args to argument, which are no flags
 	args := flag.Args()
 
