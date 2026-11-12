@@ -17,13 +17,11 @@ import (
 	"github.com/rwcarlsen/goexif/tiff"
 )
 
-var out io.Writer =os.Stdout
-
 type printer struct {}
 
 //Methode: reads exif data and makes readable design for the output
 func (printer) Walk(name exif.FieldName, tag *tiff.Tag) error {
-		_,err := fmt.Fprintf(out, " %s: %s\n", name, tag.String())
+		_,err := fmt.Printf(" %s: %s\n", name, tag.String())
 		return err
 }
 
@@ -41,7 +39,7 @@ func isSupported(filename string) (bool) {
 	}
 }
 
-func scorpion(path string, out *os.File) error{
+func scorpion(path string) error{
 
 	info, err := os.Stat(path)
 	if err != nil{
@@ -52,8 +50,7 @@ func scorpion(path string, out *os.File) error{
 		return fmt.Errorf("Error: %s is a directory", path)
 	}
 
-	_, err = fmt.Fprintf(out,
-	"\t***\tFile: %s\t***\nFilename: %s\nSize: %d Bytes\nLast Modified: %s\n",
+	_, err = fmt.Printf("\t***\tFile: %s\t***\nFilename: %s\nSize: %d Bytes\nLast Modified: %s\n",
 	path,
 	info.Name(),
 	info.Size(),
@@ -77,8 +74,7 @@ func scorpion(path string, out *os.File) error{
 		return err
 	}
 
-	_, err = fmt.Fprintf(out,
-	"Width: %d\nHeight: %d\nFormat: %s\n\n",
+	_, err = fmt.Printf("Width: %d\nHeight: %d\nFormat: %s\n\n",
 	config.Width,
 	config.Height,
 	format,
@@ -93,13 +89,13 @@ func scorpion(path string, out *os.File) error{
 	mData, err := exif.Decode(file)			//reads EXIF data
 
 	if err != nil{
-		fmt.Fprintln(out, " No EXIF data \n")
+		fmt.Println(" No EXIF data \n")
 		return nil
 	}
 
 	//print creation time if it exists
 	if time, err := mData.DateTime(); err == nil {
-		fmt.Fprintf(out, "Creation date: %s\n",time.Format("02.01.2006 15:04"))
+		fmt.Printf("Creation date: %s\n",time.Format("02.01.2006 15:04"))
 	}
 
 	err = mData.Walk(printer{})
@@ -118,27 +114,15 @@ func main(){
 		os.Exit(1)
 	}
 
-	output, err := os.Create("output.txt")
-
-	// output is global variable out 
-	out = output
-
-	if err != nil{
-		log.Println("Error creating output file:",err)
-		os.Exit(1)
-	}
-
 	for _, path := range os.Args[1:]{
 		
 		if isSupported(path){
 			
-			err = scorpion(path, output)
+			err := scorpion(path)
 			if err != nil{
 				log.Printf("Extract data from %s failed: %s",path ,err)
 			}
-			fmt.Fprintln(out, "\t\t__________________\n\n")
+			fmt.Println("\t\t__________________\n\n")
 		}
 	}
-
-	defer output.Close()
 }
