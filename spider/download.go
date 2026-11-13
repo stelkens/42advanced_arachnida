@@ -26,7 +26,7 @@ func downloadImage(client *http.Client, absoluteURL string, count *atomic.Int64,
 	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusOK {
-		return fmt.Errorf("HTTP error: %s", response.Status)
+		return fmt.Errorf("HTTP Status error while downloading: %s", response.Status)
 	}
 
 	imageFormat := valImage(client, absoluteURL)						//checks if image has right format

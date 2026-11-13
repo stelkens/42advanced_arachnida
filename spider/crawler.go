@@ -36,7 +36,7 @@ func crawl(client *http.Client, pageURL string, depth int, maxDepth int, visited
 
 	//check HTML Status
 	if response.StatusCode != http.StatusOK {
-		log.Println("HTML Error:", response.Status)
+		log.Println("HTML Status Error while crawling:", response.Status)
 		return
 	}
 
