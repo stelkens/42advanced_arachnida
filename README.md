@@ -173,6 +173,7 @@ cd spider/
 go build -o spider .
 cd ../scorpion/
 go build -o scorpion .
+cd ..
 ```
 
 ---
