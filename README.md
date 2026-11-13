@@ -169,7 +169,9 @@ cd spider-scorpion-42
 Build the programs:
 
 ```bash
+cd spider/
 go build -o spider ./spider
+cd ../scorpion/
 go build -o scorpion ./scorpion
 ```
 
