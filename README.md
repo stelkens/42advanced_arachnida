@@ -170,9 +170,9 @@ Build the programs:
 
 ```bash
 cd spider/
-go build -o spider ./spider
+go build -o spider .
 cd ../scorpion/
-go build -o scorpion ./scorpion
+go build -o scorpion .
 ```
 
 ---
